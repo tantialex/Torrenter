@@ -1,0 +1,32 @@
+﻿{
+  "ports": [
+    {
+      "port_number": 1,
+      "physical_port_address": [ 1, 2 ]
+    },
+    {
+      "port_number": 2,
+      "physical_port_address": [ 1, 3 ]
+    },
+    {
+      "port_number": 3,
+      "physical_port_address": [ 1, 4 ]
+    },
+    {
+      "port_number": 4,
+      "physical_port_address": [ 1, 1, 2 ]
+    },
+    {
+      "port_number": 5,
+      "physical_port_address": [ 1, 1, 1 ]
+    },
+    {
+      "port_number": 6,
+      "physical_port_address": [ 1, 1, 3 ]
+    },
+    {
+      "port_number": 7,
+      "physical_port_address": [ 1, 1, 4]
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "torrenter",
+  "version": "0.0.0",
+  "description": "Torrenter",
+  "main": "app.js",
+  "author": {
+    "name": "Alex"
+  },
+  "dependencies": {
+    "drivelist": "^5.2.4",
+    "fs": "0.0.1-security",
+    "usb": "^1.2.0",
+    "uuid": "^3.1.0",
+    "webtorrent": "^0.98.19"
+  }
+}
