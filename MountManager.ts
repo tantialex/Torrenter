@@ -37,7 +37,7 @@ export class MountManager{
 
     mount(mountPath: string, devicePath: string) {
         let cmds = [
-            "cd /",
+            "cd \"/\"",
             "sudo mkdir \"" + mountPath + "\"",
             "sudo mount \"" + devicePath + "\" \"" + mountPath + "\""
         ];
@@ -47,7 +47,7 @@ export class MountManager{
 
     unmount(unmountPath: string) {
         let cmds = [
-            "cd /",
+            "cd \"/\"",
             "sudo unmount \"" + unmountPath + "\""
         ];
 

@@ -33,7 +33,7 @@ function executeCommand(command) {
 class MountManager {
     mount(mountPath, devicePath) {
         let cmds = [
-            "cd /",
+            "cd \"/\"",
             "sudo mkdir \"" + mountPath + "\"",
             "sudo mount \"" + devicePath + "\" \"" + mountPath + "\""
         ];
@@ -41,7 +41,7 @@ class MountManager {
     }
     unmount(unmountPath) {
         let cmds = [
-            "cd /",
+            "cd \"/\"",
             "sudo unmount \"" + unmountPath + "\""
         ];
         return executeSeries(cmds);
