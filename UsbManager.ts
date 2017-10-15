@@ -27,6 +27,7 @@ export class UsbManager {
         getDevicesFromDriveList(result => {
             self.devices = result;
             console.log("Devices Loaded!");
+            console.log(result);
         });
     }
 
