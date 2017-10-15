@@ -2,33 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const WebTorrent = require("webtorrent");
 const Torrent_1 = require("./Torrent");
+let uuid = require('uuid');
 class TorrentManager {
     constructor(instance) {
         this.client = instance || new WebTorrent();
-        this.torrentsRunning = {};
-    }
-    getDownloadSpeedOfTorrent(name) {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-        return torrent.downloadSpeed;
-    }
-    getPathOfTorrent(name) {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-        return torrent.path;
-    }
-    getTimeRemainingOfTorrent(name) {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-        return torrent.timeRemaining;
-    }
-    getProgressOfTorrent(name) {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-        return (torrent.progress * 100);
+        this.torrentsRunning = new Array();
     }
     getTorrentIdById(id) {
-        return this.torrentsRunning[id];
+        for (let torrent of this.torrentsRunning) {
+            if (torrent.id === id) {
+                return torrent;
+            }
+        }
+        throw new Error();
+    }
+    getTorrents() {
+        return this.torrentsRunning;
     }
     downloadTorrent(magnetLink, path, name, onFinish) {
         let self = this;
@@ -36,8 +25,7 @@ class TorrentManager {
             path: path
         };
         this.client.add(magnetLink, options, function (torrent) {
-            let model = new Torrent_1.Torrent("name", magnetLink);
-            self.torrentsRunning[this.uuid.v4()] = model;
+            this.torrentsRunning.push(new Torrent_1.Torrent(uuid.v4(), "name", magnetLink));
             if (onFinish !== null) {
                 torrent.on('done', function () {
                     onFinish(torrent);

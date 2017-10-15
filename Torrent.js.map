@@ -1,1 +1,1 @@
-{"version":3,"file":"Torrent.js","sourceRoot":"","sources":["Torrent.ts"],"names":[],"mappings":";;AAAA;IAII,YAAY,IAAY,EAAE,UAAkB;QACxC,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QACjB,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;IACjC,CAAC;CACJ;AARD,0BAQC"}
+{"version":3,"file":"Torrent.js","sourceRoot":"","sources":["Torrent.ts"],"names":[],"mappings":";;AAAA;IAKI,YAAY,EAAU,EAAE,IAAY,EAAE,UAAkB;QACpD,IAAI,CAAC,EAAE,GAAG,EAAE,CAAC;QACb,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QACjB,IAAI,CAAC,UAAU,GAAG,UAAU,CAAC;IACjC,CAAC;CACJ;AAVD,0BAUC"}

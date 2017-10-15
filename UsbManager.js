@@ -9,7 +9,6 @@ function getDevicesFromDriveList(callback) {
             throw error;
         }
         let devices = new Array();
-        console.log(drives);
         for (let i = 0; i < drives.length; i++) {
             if (drives[i].system === false) {
                 let id = uuid.v4();

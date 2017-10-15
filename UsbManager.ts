@@ -8,7 +8,6 @@ function getDevicesFromDriveList(callback): Promise<Array<UsbDevice>> {
             throw error;
         }
         let devices: Array<UsbDevice> = new Array<UsbDevice>();
-        console.log(drives);
 
         for (let i = 0; i < drives.length; i++) {
             if (drives[i].system === false) {

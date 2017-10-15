@@ -1,47 +1,28 @@
 ﻿import * as WebTorrent from 'webtorrent';
-import * as Uuid from 'uuid';
 import { Torrent } from './Torrent';
+
+let uuid = require('uuid');
 
 export class TorrentManager {
     client: WebTorrent.Instance;
-    uuid: Uuid.Instance;
-    torrentsRunning: { [name: string]: Torrent };
+    torrentsRunning: Array<Torrent>
 
     constructor(instance: WebTorrent.Instance | null) {
         this.client = instance || new WebTorrent();
-        this.torrentsRunning = {};
-    }
-
-    getDownloadSpeedOfTorrent(name: string): number {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-
-        return torrent.downloadSpeed;
-    }
-
-    getPathOfTorrent(name: string): string {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-
-        return torrent.path;
-    }
-
-    getTimeRemainingOfTorrent(name: string): number {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-
-        return torrent.timeRemaining;
-    }
-
-    getProgressOfTorrent(name: string): number {
-        let torrentId = this.torrentsRunning[name];
-        let torrent = this.client.get(torrentId);
-
-        return (torrent.progress * 100);
+        this.torrentsRunning = new Array<Torrent>();
     }
 
     getTorrentIdById(id: string): Torrent {
-        return this.torrentsRunning[id];
+        for (let torrent of this.torrentsRunning) {
+            if (torrent.id === id) {
+                return torrent;
+            }
+        }
+        throw new Error();
+    }
+
+    getTorrents(): Array<Torrent> {
+        return this.torrentsRunning;
     }
 
     downloadTorrent(magnetLink: string, path: string, name?: string, onFinish?: (torrent: WebTorrent.Torrent) => void): void {
@@ -51,9 +32,7 @@ export class TorrentManager {
         };
 
         this.client.add(magnetLink, options, function (torrent: WebTorrent.Torrent) {
-            let model = new Torrent("name", magnetLink);
-
-            self.torrentsRunning[this.uuid.v4()] = model;
+            this.torrentsRunning.push(new Torrent(uuid.v4(), "name", magnetLink));
 
             if (onFinish !== null) {
                 torrent.on('done', function () {
