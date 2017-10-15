@@ -31,6 +31,7 @@ export class TorrentManager {
             path: path
         };
 
+        console.log("Adding torrent: " + magnetLink);
         this.client.add(magnetLink, options, function (torrent: WebTorrent.Torrent) {
             let id = uuid.v4();
 
