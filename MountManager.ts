@@ -1,7 +1,7 @@
 ﻿
 function executeSeries(commands) {
     var execNext = function () {
-        return exports.exec(commands.shift()).then((result) => {
+        return executeCommand(commands.shift()).then((result) => {
             if (commands.length) execNext();
         });
     }
@@ -15,7 +15,7 @@ function executeSeries(commands) {
 
 function executeCommand(command) {
     var child_process = require('child_process');
-
+    console.log("Called ExecuteCommand");
     return new Promise((resolve, reject) => {
         console.log("Executing: " + command);
         var parts = command.split(/\s+/g);
