@@ -25,7 +25,9 @@ class TorrentManager {
             path: path
         };
         this.client.add(magnetLink, options, function (torrent) {
-            this.torrentsRunning.push(new Torrent_1.Torrent(uuid.v4(), "name", magnetLink));
+            let id = uuid.v4();
+            this.torrentsRunning.push(new Torrent_1.Torrent(id, "name", magnetLink));
+            console.log("Torrent added: " + id);
             if (onFinish !== null) {
                 torrent.on('done', function () {
                     onFinish(torrent);
