@@ -1,44 +1,41 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Port_1 = require("./Port");
-class UsbManager {
-    constructor(portList) {
-        this.usb = require('usb');
-        console.log(portList.ports);
-        this.ports = new Array();
-        for (let i = 0; i < portList.ports.length; i++) {
-            this.ports[i] = new Port_1.Port(portList.ports[i].port_number, portList.ports[i].physical_port_address, "");
+const UsbDevice_1 = require("./UsbDevice");
+let driveList = require('drivelist');
+let uuid = require('uuid');
+function getDevicesFromDriveList(callback) {
+    return driveList.list((error, drives) => {
+        if (error) {
+            throw error;
         }
+        let devices = new Array();
+        for (let i = 0; i < drives.length; i++) {
+            if (drives[i].system === false) {
+                let id = uuid.v4();
+                devices.push(new UsbDevice_1.UsbDevice(id, drives[i].description, drives[i].size, drives[i].raw));
+            }
+        }
+        callback(devices);
+    });
+}
+class UsbManager {
+    constructor() {
+        let self = this;
+        getDevicesFromDriveList(result => {
+            self.devices = result;
+            console.log("Devices Loaded!");
+        });
     }
     getDevices() {
-        return this.usb.getDeviceList();
+        return this.devices;
     }
-    getAvailablePorts() {
-        var ports = [];
-        var deviceList = this.usb.getDeviceList();
-        for (var i = 0; i < deviceList.length; i++) {
-            // ports = ports.concat(deviceList[i].portNumbers);
-            //ports.push(deviceList[i].busNumber);
-            ports.push(deviceList[i].deviceAddress);
-        }
-        return ports;
-    }
-    getPathOfPort(portNumber) {
-        this.ports.forEach(function (item) {
-            if (item.portNumber == portNumber) {
-                return item.portPath;
+    getPathById(id) {
+        for (let deviceItem of this.devices) {
+            if (deviceItem.id = id) {
+                return deviceItem.path;
             }
-        });
-        throw new Error();
-    }
-    getAvailableBuses() {
-        var ports = [];
-        var deviceList = this.usb.getDeviceList();
-        for (var i = 0; i < deviceList.length; i++) {
-            // ports = ports.concat(deviceList[i].portNumbers);
-            ports.push(deviceList[i].busNumber);
         }
-        return ports;
+        throw new Error();
     }
 }
 exports.UsbManager = UsbManager;

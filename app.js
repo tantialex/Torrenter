@@ -4,9 +4,7 @@ const TorrentManager_1 = require("./TorrentManager");
 const UsbManager_1 = require("./UsbManager");
 var fs = require('fs');
 var torrentManager = new TorrentManager_1.TorrentManager(null);
-let portConfig = require('./port_configuration.json');
-console.log(portConfig);
-var usbManager = new UsbManager_1.UsbManager(portConfig);
+var usbManager = new UsbManager_1.UsbManager();
 var driveList = require('drivelist');
 var stdin = process.stdin;
 stdin.setEncoding('utf8');
@@ -14,33 +12,15 @@ stdin.addListener("data", function (d) {
     var text = d.toString().trim().split(' ');
     var command = text[0];
     if (command === "drivelist") {
-        driveList.list((error, drives) => {
-            if (error) {
-                throw error;
-            }
-            console.log(drives);
-        });
-    }
-    if (command === "usb") {
-        var ports = usbManager.getAvailablePorts();
-        console.log(ports);
-        console.log(ports.length);
-    }
-    else if (command === "bus") {
-        var buses = usbManager.getAvailableBuses();
-        console.log(buses);
-        console.log(buses.length);
-    }
-    else if (command === "device") {
-        var devices = usbManager.getDevices();
-        console.log(devices);
-        console.log(devices.length);
+        console.log(usbManager.getDevices());
     }
     else if (command === "add") {
-        //let path = UsbManager.
-        //torrentManager.downloadTorrent(text[1], , function (torrent) {
-        //    console.log("done");
-        //});
+        let deviceId = text[1];
+        let magnetLink = text[2];
+        let path = usbManager.getPathById(deviceId);
+        torrentManager.downloadTorrent(magnetLink, path, "name", function (torrent) {
+            console.log("done");
+        });
     }
     else if (command === "progress") {
         console.log(torrentManager.getProgressOfTorrent(text[1]));

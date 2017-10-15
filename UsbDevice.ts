@@ -1,9 +1,13 @@
 ﻿export class UsbDevice{
-    name: string;
+    id: string;
+    description: string;
     size: number;
+    path: string;
 
-    constructor(name: string, size: number) {
-        this.name = name;
+    constructor(id: string, description: string, size: number, path: string) {
+        this.id = id;
+        this.description = description;
         this.size = size;
+        this.path = path;
     }
 }

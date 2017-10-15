@@ -1,52 +1,45 @@
-﻿import { Port } from './Port';
+﻿import { UsbDevice } from './UsbDevice';
+let driveList = require('drivelist');
+let uuid = require('uuid');
+
+function getDevicesFromDriveList(callback): Promise<Array<UsbDevice>> {
+    return driveList.list((error, drives) => {
+        if (error) {
+            throw error;
+        }
+        let devices: Array<UsbDevice> = new Array<UsbDevice>();
+
+        for (let i = 0; i < drives.length; i++) {
+            if (drives[i].system === false) {
+                let id = uuid.v4();
+                devices.push(new UsbDevice(id, drives[i].description, drives[i].size, drives[i].raw));
+            }
+        }
+        callback(devices);
+    });
+}
 
 export class UsbManager {
-    usb;
-    ports: Array<Port>;
+    devices: Array<UsbDevice>;
 
-    constructor(portList) {
-        this.usb = require('usb');
-        console.log(portList.ports);
-        this.ports = new Array<Port>();
-
-        for (let i = 0; i < portList.ports.length; i++) {
-            this.ports[i] = new Port(portList.ports[i].port_number, portList.ports[i].physical_port_address, "");
-        }
-    }
-
-    getDevices(): any {
-        return this.usb.getDeviceList();
-    }
-
-    getAvailablePorts(): any {
-        var ports = [];
-        var deviceList = this.usb.getDeviceList();
-        for (var i = 0; i < deviceList.length; i++) {
-           // ports = ports.concat(deviceList[i].portNumbers);
-            //ports.push(deviceList[i].busNumber);
-            ports.push(deviceList[i].deviceAddress);    
-
-        }
-        return ports;
-    }
-
-    getPathOfPort(portNumber: number): string {
-        this.ports.forEach(function (item) {
-            if (item.portNumber == portNumber) {
-                return item.portPath;
-            }
+    constructor() {
+        let self = this;
+        getDevicesFromDriveList(result => {
+            self.devices = result;
+            console.log("Devices Loaded!");
         });
-        throw new Error();
     }
 
-    getAvailableBuses(): any {
-        var ports = [];
-        var deviceList = this.usb.getDeviceList();
-        for (var i = 0; i < deviceList.length; i++) {
-            // ports = ports.concat(deviceList[i].portNumbers);
-            ports.push(deviceList[i].busNumber);
+    getDevices(): Array<UsbDevice> {
+        return this.devices;
+    }
 
+    getPathById(id: string): string{
+        for (let deviceItem of this.devices) {
+            if (deviceItem.id = id) {
+                return deviceItem.path;
+            }
         }
-        return ports;
+        throw new Error();
     }
 }
