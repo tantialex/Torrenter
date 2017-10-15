@@ -1,4 +1,5 @@
 ﻿import { UsbDevice } from './UsbDevice';
+import { MountManager } from './MountManager';
 let driveList = require('drivelist');
 let uuid = require('uuid');
 
@@ -10,10 +11,19 @@ function getDevicesFromDriveList(callback): Promise<Array<UsbDevice>> {
         let devices: Array<UsbDevice> = new Array<UsbDevice>();
         console.log(drives);
         for (let i = 0; i < drives.length; i++) {
+            let drive = drives[i];
             console.log(drives[i].mountpoints);
-            if (drives[i].system === false) {
+            if (drive.system === false) {
+                if (drive.mountpoints.length === 0) {
+                    let mountManager = new MountManager();
+                    let mountPath = "/mounts/test";
+                    mountManager.mount(mountPath, drive.raw).then(() => {
+                        let id = uuid.v4();
+                        devices.push(new UsbDevice(id, drive.description, drive.size, drive.mountPath));
+                    });
+                }
                 let id = uuid.v4();
-                devices.push(new UsbDevice(id, drives[i].description, drives[i].size, drives[i].raw));
+                devices.push(new UsbDevice(id, drive.description, drive.size, drive.mountpoints[0]));
             }
         }
         callback(devices);
