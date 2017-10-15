@@ -10,6 +10,7 @@ function getDevicesFromDriveList(callback): Promise<Array<UsbDevice>> {
         let devices: Array<UsbDevice> = new Array<UsbDevice>();
         console.log(drives);
         for (let i = 0; i < drives.length; i++) {
+            console.log(drives[i].mountpoints);
             if (drives[i].system === false) {
                 let id = uuid.v4();
                 devices.push(new UsbDevice(id, drives[i].description, drives[i].size, drives[i].raw));
