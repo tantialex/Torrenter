@@ -42,11 +42,11 @@ export class MountManager{
         let cmds = [
             {
                 command: "sudo mkdir \"" + mountPath + "\"",
-                cwd: "cd \"/\""
+                cwd: "/"
             },
             {
                 command: "sudo mount \"" + devicePath + "\" \"" + mountPath + "\"",
-                cwd: "cd \"/\""
+                cwd: "/"
             }
         ]
 
