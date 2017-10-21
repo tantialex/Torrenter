@@ -19,7 +19,7 @@ function executeCommands(commands) {
     return new Promise((resolve, reject) => {
         function execute(internalCommands) {
             if (commands.length > 0) {
-                executeCommand(commands[0].command, commands[0].cdw).then(() => {
+                executeCommand(commands[0].command, commands[0].cwd).then(() => {
                     console.log("Executed successfully");
                     internalCommands.shift();
                     execute(internalCommands);

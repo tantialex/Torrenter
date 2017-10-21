@@ -21,7 +21,9 @@ function getDevicesFromDriveList(callback): Promise<Array<UsbDevice>> {
                     let mountManager = new MountManager();
                     let mountPath = "/mounts/test"+i;
 
+                    console.log("Mounting " + drive.description);
                     mountManager.mount(mountPath, drive.raw).then(() => {
+                        console.log("Mounted " + drive.description + " successfully at: " + drive.mountPath);
                         let id = uuid.v4();
                         devices.push(new UsbDevice(id, drive.description, drive.size, drive.mountPath));
                     });

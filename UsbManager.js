@@ -18,7 +18,9 @@ function getDevicesFromDriveList(callback) {
                 if (drive.mountpoints.length === 0) {
                     let mountManager = new MountManager_1.MountManager();
                     let mountPath = "/mounts/test" + i;
+                    console.log("Mounting " + drive.description);
                     mountManager.mount(mountPath, drive.raw).then(() => {
+                        console.log("Mounted " + drive.description + " successfully at: " + drive.mountPath);
                         let id = uuid.v4();
                         devices.push(new UsbDevice_1.UsbDevice(id, drive.description, drive.size, drive.mountPath));
                     });
