@@ -1,11 +1,11 @@
 ﻿var child_process = require('child_process');
 
-function executeCommand(command: string, cdw?: string): Promise<Error>{
+function executeCommand(command: string, cwd?: string): Promise<Error>{
     console.log("Called ExecuteCommand");
     return new Promise((resolve, reject) => {
-        console.log("Executing command: \"" + command + "\" at \"" + cdw + "\"");
+        console.log("Executing command: \"" + command + "\" at \"" + cwd + "\"");
 
-        let options = cdw ? { cdw: cdw, stdio: 'inherit', shell: true } : { stdio: 'inherit', shell: true };
+        let options = cwd ? { cwd: cwd, stdio: 'inherit', shell: true } : { stdio: 'inherit', shell: true };
         console.log(options);
         child_process.exec(command, options, (err, stdout, stderr) => {
             if (err) {
@@ -25,7 +25,7 @@ function executeCommands(commands: { command: string, cwd?: string }[]): Promise
                     internalCommands.shift();
                     execute(internalCommands);
                 }).catch((err) => {
-                    Console.log("Error");
+                    console.log("Error");
                     console.log(err);
                     reject(err);
                 });

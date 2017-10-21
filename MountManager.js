@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var child_process = require('child_process');
-function executeCommand(command, cdw) {
+function executeCommand(command, cwd) {
     console.log("Called ExecuteCommand");
     return new Promise((resolve, reject) => {
-        console.log("Executing command: \"" + command + "\" at \"" + cdw + "\"");
-        let options = cdw ? { cdw: cdw, stdio: 'inherit', shell: true } : { stdio: 'inherit', shell: true };
+        console.log("Executing command: \"" + command + "\" at \"" + cwd + "\"");
+        let options = cwd ? { cwd: cwd, stdio: 'inherit', shell: true } : { stdio: 'inherit', shell: true };
         console.log(options);
         child_process.exec(command, options, (err, stdout, stderr) => {
             if (err) {
@@ -24,6 +24,7 @@ function executeCommands(commands) {
                     internalCommands.shift();
                     execute(internalCommands);
                 }).catch((err) => {
+                    console.log("Error");
                     console.log(err);
                     reject(err);
                 });
@@ -38,11 +39,11 @@ class MountManager {
         let cmds = [
             {
                 command: "sudo mkdir \"" + mountPath + "\"",
-                cwd: "cd \"/\""
+                cwd: "/"
             },
             {
                 command: "sudo mount \"" + devicePath + "\" \"" + mountPath + "\"",
-                cwd: "cd \"/\""
+                cwd: "/"
             }
         ];
         return executeCommands(cmds);
