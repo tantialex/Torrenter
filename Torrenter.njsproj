@@ -51,6 +51,9 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="README.md" />
+    <TypeScriptCompile Include="MountManager.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Include="Scripts\typings\node\node.d.ts" />
     <TypeScriptCompile Include="TorrentManager.ts">
       <SubType>Code</SubType>

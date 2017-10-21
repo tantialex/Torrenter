@@ -1,48 +1,55 @@
-﻿
-function executeSeries(commands) {
-    var execNext = function () {
-        return executeCommand(commands.shift()).then((result) => {
-            if (commands.length) execNext();
-        });
-    }
+﻿var child_process = require('child_process');
 
-    return execNext().then(() => {
-        console.log("Execution Done");
-    }).catch((err) => {
-        throw err;
+function executeCommand(command: string, cdw?: string): Promise<Error>{
+    console.log("Called ExecuteCommand");
+    return new Promise((resolve, reject) => {
+        console.log("Executing command: \"" + command + "\" at \"" + cdw + "\"");
+
+        let options = cdw ? { cdw: cdw, stdio: 'inherit', shell: true } : { stdio: 'inherit', shell: true };
+        console.log(options);
+        child_process.exec(command, options, (err, stdout, stderr) => {
+            if (err) {
+                reject(new Error(err));
+            }
+            resolve();
+        });
     });
 }
 
-function executeCommand(command) {
-    var child_process = require('child_process');
-    console.log("Called ExecuteCommand");
+function executeCommands(commands: { command: string, cdw?: string }[]): Promise<Error> {
     return new Promise((resolve, reject) => {
-        console.log("Executing: " + command);
-        var parts = command.split(/\s+/g);
-
-
-        var p = child_process.spawn(parts[0], parts.slice(1), { stdio: 'inherit' });
-
-        p.on('exit', function (code) {
-            if (code) {
-                reject(new Error('command "' + command + '" exited with wrong status code "' + code + '"'));
-            } else {
-                resolve();
+        function execute(internalCommands: { command: string, cdw?: string }[]) {
+            if (commands.length > 0) {
+                executeCommand(commands[0].command, commands[0].cdw).then(() => {
+                    console.log("Executed successfully");
+                    internalCommands.shift();
+                    execute(internalCommands);
+                }).catch((err) => {
+                    console.log(err);
+                    reject(err);
+                });
             }
-        });
+            resolve();
+        }
+        execute(commands);
     });
 }
 
 export class MountManager{
 
-    mount(mountPath: string, devicePath: string) {
+    mount(mountPath: string, devicePath: string): Promise<Error> {
         let cmds = [
-            "cd \"/\"",
-            "sudo mkdir \"" + mountPath + "\"",
-            "sudo mount \"" + devicePath + "\" \"" + mountPath + "\""
-        ];
+            {
+                command: "sudo mkdir \"" + mountPath + "\"",
+                cwd: "cd \"/\""
+            },
+            {
+                command: "sudo mount \"" + devicePath + "\" \"" + mountPath + "\"",
+                cwd: "cd \"/\""
+            }
+        ]
 
-        return executeSeries(cmds);
+        return executeCommands(cmds);
     }
 
     unmount(unmountPath: string) {
@@ -51,6 +58,6 @@ export class MountManager{
             "sudo unmount \"" + unmountPath + "\""
         ];
 
-        return executeSeries(cmds);
+        return executeCommand("","");
     }
 }
